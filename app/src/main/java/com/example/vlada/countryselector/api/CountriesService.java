@@ -1,7 +1,9 @@
-package com.example.vlada.countryselector;
+package com.example.vlada.countryselector.api;
 
 
-import com.example.vlada.countryselector.model.City;
+import com.example.vlada.countryselector.Application;
+import com.example.vlada.countryselector.api.CityInfo;
+import com.example.vlada.countryselector.api.CountriesToCities;
 import com.example.vlada.countryselector.model.InfoResponse;
 import com.readystatesoftware.chuck.ChuckInterceptor;
 

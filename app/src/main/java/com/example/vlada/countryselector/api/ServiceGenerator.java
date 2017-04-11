@@ -1,4 +1,4 @@
-package com.example.vlada.countryselector;
+package com.example.vlada.countryselector.api;
 
 /**
  * Created by vlada on 10.04.2017.

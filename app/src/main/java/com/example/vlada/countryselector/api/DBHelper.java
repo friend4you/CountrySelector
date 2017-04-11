@@ -1,4 +1,4 @@
-package com.example.vlada.countryselector;
+package com.example.vlada.countryselector.api;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +28,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

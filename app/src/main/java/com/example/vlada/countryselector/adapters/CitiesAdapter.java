@@ -1,4 +1,4 @@
-package com.example.vlada.countryselector;
+package com.example.vlada.countryselector.adapters;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.vlada.countryselector.CityActivity;
+import com.example.vlada.countryselector.R;
 
 import java.util.ArrayList;
 import java.util.List;

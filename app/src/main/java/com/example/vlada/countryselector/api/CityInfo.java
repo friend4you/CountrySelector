@@ -1,4 +1,4 @@
-package com.example.vlada.countryselector;
+package com.example.vlada.countryselector.api;
 
 import com.example.vlada.countryselector.model.City;
 import com.example.vlada.countryselector.model.InfoResponse;

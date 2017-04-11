@@ -1,4 +1,4 @@
-package com.example.vlada.countryselector;
+package com.example.vlada.countryselector.api;
 
 import java.util.List;
 import java.util.Map;
