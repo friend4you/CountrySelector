@@ -19,24 +19,29 @@ import rx.schedulers.Schedulers;
 
 public class CityActivity extends AppCompatActivity {
 
-    private String city = "";
     private TextView summary;
     private TextView title;
     private TextView link;
     private ImageView image;
+    private String city = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.city_info);
-        Intent intent = getIntent();
-        city = intent.getStringExtra("city");
+        Intent intent;
+        if (getIntent() != null) {
+            intent = getIntent();
+            city = intent.getStringExtra("city");
+        }else{
+            Toast.makeText(this, "Info not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         title = (TextView) findViewById(R.id.title);
         link = (TextView) findViewById(R.id.link);
-        image =(ImageView) findViewById(R.id.imageView);
-
+        image = (ImageView) findViewById(R.id.imageView);
         summary = (TextView) findViewById(R.id.summary);
-
 
         fetchCityInfo();
     }
@@ -55,9 +60,9 @@ public class CityActivity extends AppCompatActivity {
                             .into(image);
                     link.setClickable(true);
                     link.setText(info.getWikipediaUrl());
-                    link.setOnClickListener(c ->{
-                        Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+ info.getWikipediaUrl()));
-                        startActivity( browse );
+                    link.setOnClickListener(c -> {
+                        Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + info.getWikipediaUrl()));
+                        startActivity(browse);
                     });
                 }, error -> {
                     Log.e("fetchCityInfo", "failure", error);
