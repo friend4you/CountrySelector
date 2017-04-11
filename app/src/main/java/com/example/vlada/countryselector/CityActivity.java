@@ -70,4 +70,10 @@ public class CityActivity extends AppCompatActivity {
                 });
 
     }
+
+    public static Intent getIntent(String city){
+        Intent intent = new Intent(Application.getSharedInstance().getApplicationContext(), CityActivity.class);
+        intent.putExtra("city", city);
+        return intent;
+    }
 }

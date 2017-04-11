@@ -45,6 +45,22 @@ public class City {
         return geoNameId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City city = (City) o;
+
+        return geoNameId != null ? geoNameId.equals(city.geoNameId) : city.geoNameId == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return geoNameId != null ? geoNameId.hashCode() : 0;
+    }
+
     public String getFeature() {
         return feature;
     }

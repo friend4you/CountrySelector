@@ -54,8 +54,7 @@ public class CitiesAdapter  extends Adapter<ViewHolder> {
         title = (TextView) itemView.findViewById(R.id.city);
 
         itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(itemView.getContext(), CityActivity.class);
-            intent.putExtra("city", title.getText());
+            Intent intent = CityActivity.getIntent(title.getText().toString());
             itemView.getContext().startActivity(intent);
         });
     }

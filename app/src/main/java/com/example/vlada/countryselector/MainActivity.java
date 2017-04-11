@@ -1,5 +1,6 @@
 package com.example.vlada.countryselector;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        countries = new ArrayList<String>();
+        cities = new ArrayList<String>();
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         content = (LinearLayout) findViewById(R.id.content);
@@ -107,5 +110,4 @@ public class MainActivity extends AppCompatActivity {
         content.setVisibility(show ? View.GONE : View.VISIBLE);
         floatingActionButton.setVisibility(show ? View.GONE : View.VISIBLE);
     }
-
 }
