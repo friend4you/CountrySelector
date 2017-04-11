@@ -24,6 +24,7 @@ public class CityActivity extends AppCompatActivity {
     private TextView link;
     private ImageView image;
     private String city = "";
+    private final static String CITY = "city";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class CityActivity extends AppCompatActivity {
         Intent intent;
         if (getIntent() != null) {
             intent = getIntent();
-            city = intent.getStringExtra("city");
+            city = intent.getStringExtra(CITY);
         }else{
             Toast.makeText(this, "Info not found", Toast.LENGTH_SHORT).show();
             return;
@@ -73,7 +74,7 @@ public class CityActivity extends AppCompatActivity {
 
     public static Intent getIntent(String city){
         Intent intent = new Intent(Application.getSharedInstance().getApplicationContext(), CityActivity.class);
-        intent.putExtra("city", city);
+        intent.putExtra(CITY, city);
         return intent;
     }
 }

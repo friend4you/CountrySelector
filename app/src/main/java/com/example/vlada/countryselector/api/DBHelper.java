@@ -6,19 +6,28 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    public final static String COUNTRIES = "countries";
+    public final static String COUNTRYID = "id";
+    public final static String COUNTRY = "country";
+
+    public final static String CITIES = "cities";
+    public final static String CITYID = "id";
+    public final static String CITY = "city";
+    public final static String CITIES_COUNTRYID = "countryId";
+
     public DBHelper(Context context) {
         super(context, "myDB", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table countries(" +
-            "id integer primary key autoincrement," +
-            "country text);");
-        db.execSQL("create table cities(" +
-                "id integer primary key autoincrement," +
-                "city text," +
-                "countryId integer," +
+        db.execSQL("create table " + COUNTRIES + "(" +
+                COUNTRYID + "integer primary key autoincrement," +
+                COUNTRY + " text);");
+        db.execSQL("create table "+ CITIES+"(" +
+                CITYID+" integer primary key autoincrement," +
+                CITY+" text," +
+                CITIES_COUNTRYID +" integer," +
                 "FOREIGN KEY(countryId) REFERENCES countries(id));");
     }
 

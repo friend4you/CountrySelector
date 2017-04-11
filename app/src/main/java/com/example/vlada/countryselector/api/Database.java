@@ -17,9 +17,9 @@ public class Database {
         countries.clear();
         DBHelper dbHelper = new DBHelper(Application.getSharedInstance().getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor c = db.query("countries", null, null, null, null, null, null);
+        Cursor c = db.query(DBHelper.COUNTRIES, null, null, null, null, null, null);
         if (c.moveToFirst()) {
-            int countryIndex = c.getColumnIndex("country");
+            int countryIndex = c.getColumnIndex(DBHelper.COUNTRY);
             do {
                 countries.add(c.getString(countryIndex));
             } while (c.moveToNext());
@@ -38,7 +38,7 @@ public class Database {
         DBHelper dbHelper = new DBHelper(Application.getSharedInstance().getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        Cursor v = db.query("countries", null, null, null, null, null, null);
+        Cursor v = db.query(DBHelper.COUNTRIES, null, null, null, null, null, null);
         Cursor countryCursor = db.rawQuery("select * from countries where country = (?)", new String[]{country});
         if (countryCursor.moveToFirst()) {
             int countryIdIndex = v.getColumnIndex("id");
@@ -61,17 +61,17 @@ public class Database {
         return cities;
     }
 
-    public static void incertData(Map<String, List<String>> data){
+    public static void incertData(Map<String, List<String>> data) {
 
         DBHelper dbHelper = new DBHelper(Application.getSharedInstance().getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.delete("cities", null, null);
-        db.delete("countries", null, null);
+        db.delete(DBHelper.CITIES, null, null);
+        db.delete(DBHelper.COUNTRIES, null, null);
         try {
             db.beginTransaction();
             for (Map.Entry<String, List<String>> element : data.entrySet()) {
-                db.execSQL("insert into countries (country) values (?);", new String[]{element.getKey()});
+                db.execSQL("insert into" + DBHelper.COUNTRIES + " (" + DBHelper.COUNTRY + ") values (?);", new String[]{element.getKey()});
             }
             db.setTransactionSuccessful();
         } catch (SQLException e) {
@@ -79,16 +79,16 @@ public class Database {
         } finally {
             db.endTransaction();
         }
-        Cursor c = db.query("countries", null, null, null, null, null, null);
+        Cursor c = db.query(DBHelper.COUNTRIES, null, null, null, null, null, null);
         if (c.moveToFirst()) {
-            int idIndex = c.getColumnIndex("id");
-            int countryIndex = c.getColumnIndex("country");
+            int idIndex = c.getColumnIndex(DBHelper.COUNTRYID);
+            int countryIndex = c.getColumnIndex(DBHelper.COUNTRY);
             try {
                 db.beginTransaction();
                 do {
                     final String country = c.getString(countryIndex);
                     for (String city : data.get(country)) {
-                        db.execSQL("insert into cities (city, countryId) values (?,?);", new Object[]{city, c.getInt(idIndex)});
+                        db.execSQL("insert into " + DBHelper.CITIES + " (" + DBHelper.CITY + ", " + DBHelper.CITIES_COUNTRYID + ") values (?,?);", new Object[]{city, c.getInt(idIndex)});
                     }
                 } while (c.moveToNext());
                 db.setTransactionSuccessful();
