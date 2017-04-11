@@ -59,7 +59,7 @@ public class CityActivity extends AppCompatActivity {
                     });
                 }, error -> {
                     Log.d("fetchCityInfo", "failure");
-                    Toast.makeText(this, "Failed to get info", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Info not found", Toast.LENGTH_SHORT).show();
                 });
 
     }

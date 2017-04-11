@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private List<String> countries;
     private List<String> cities;
-    ArrayAdapter<String> spinnerArrayAdapter;
-    CitiesAdapter adapter;
-
-    DBHelper dbHelper;
+    private ArrayAdapter<String> spinnerArrayAdapter;
+    private CitiesAdapter adapter;
+    private ProgressBar progressBar;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         countries = new ArrayList<String>();
         cities = new ArrayList<String>();
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         dbHelper = new DBHelper(this);
 
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getCities(position, 0);
+                getCities(position);
                 adapter.add(cities);
                 Log.d("position", position + "");
                 Log.d("id", id + "");
@@ -77,12 +79,6 @@ public class MainActivity extends AppCompatActivity {
             adapter = new CitiesAdapter();
         }
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
 
 
     }
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         c.close();
     }
 
-    public void getCities(int id, int position) {
+    public void getCities(int id) {
         String country = countries.get(id);
         int countryId = 0;
         cities.clear();
@@ -120,26 +116,19 @@ public class MainActivity extends AppCompatActivity {
         Cursor cityCursor = db.rawQuery("select * from cities where countryId = (?)", new String[]{Integer.toString(countryId)});
         if (cityCursor.moveToFirst()) {
             int cityIndex = cityCursor.getColumnIndex("city");
-            int countryIdIndex = cityCursor.getColumnIndex("countryId");
-            if (position == 0) {
-                do {
-                    cities.add(cityCursor.getString(cityIndex));
-                } while (cityCursor.moveToNext() && cities.size() - 1 < position + 20);
-            }
+            do {
+                cities.add(cityCursor.getString(cityIndex));
+            } while (cityCursor.moveToNext());
         } else {
             cities.add("empty");
         }
         v.close();
         countryCursor.close();
-
+        cityCursor.close();
     }
 
     public void fetchData() {
-        ContentValues cvCity = new ContentValues();
-        ContentValues cvCountry = new ContentValues();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        final long[] startTime = {System.currentTimeMillis()};
-        Log.d("TEST", "fetchData: start");
         ServiceGenerator.getCountiesService().getCountriesToCities()
                 .subscribeOn(Schedulers.io())
                 .doOnNext(data -> {
@@ -179,21 +168,25 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
-                    // TODO: 10.04.2017 show progressbar
+                    showProgress(true);
                 })
                 .doOnUnsubscribe(() -> {
-                    // TODO: 10.04.2017 hide progressbar
+                    showProgress(false);
                 })
                 .subscribe(
                         data -> {
                             countries.clear();
                             countries.addAll(data.keySet());
                             spinnerArrayAdapter.notifyDataSetChanged();
+                            Log.d("fetch", "success");
                         }, error -> {
                             Log.d("failure", "failure");
                             Toast.makeText(this, "Failed to get Subscribed", Toast.LENGTH_SHORT).show();
                         });
     }
 
+    public void showProgress(final boolean show){
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
 
 }
