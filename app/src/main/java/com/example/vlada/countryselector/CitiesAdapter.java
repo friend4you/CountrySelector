@@ -22,8 +22,8 @@ public class CitiesAdapter  extends Adapter<ViewHolder> {
     }
 
     public void add(List<String> itemList){
-        this.cities.clear();
-        this.cities = itemList;
+        cities.clear();
+        cities.addAll(itemList);
         notifyDataSetChanged();
     }
 
