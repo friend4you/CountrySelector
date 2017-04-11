@@ -1,9 +1,5 @@
 package com.example.vlada.countryselector.api;
 
-/**
- * Created by vlada on 10.04.2017.
- */
-
 public class ServiceGenerator  {
 
     private static CountriesService service;

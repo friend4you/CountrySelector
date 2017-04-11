@@ -31,24 +31,22 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Spinner spinner;
     private FloatingActionButton floatingActionButton;
+    private ProgressBar progressBar;
+    private LinearLayout content;
+    private CitiesAdapter adapter;
+    private ArrayAdapter<String> spinnerArrayAdapter;
     private List<String> countries;
     private List<String> cities;
-    private ArrayAdapter<String> spinnerArrayAdapter;
-    private CitiesAdapter adapter;
-    private ProgressBar progressBar;
     private DBHelper dbHelper;
-    private LinearLayout content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        countries = new ArrayList<String>();
-        cities = new ArrayList<String>();
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        dbHelper = new DBHelper(this);
         content = (LinearLayout) findViewById(R.id.content);
+        dbHelper = new DBHelper(this);
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(v -> {
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         spinner = (Spinner) findViewById(R.id.countries);
         countries = Database.getCountries(countries);
-        spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countries); //selected item will look like a spinner set from XML
+        spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countries);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
 
@@ -82,12 +80,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void fetchData() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         ServiceGenerator.getCountiesService().getCountriesToCities()
                 .subscribeOn(Schedulers.io())
-                .doOnNext(data -> {
-                    Database.incertData(data);
-                })
+                .doOnNext(Database::incertData)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
                     showProgress(true);
@@ -102,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                             spinnerArrayAdapter.notifyDataSetChanged();
                             Log.d("fetch", "success");
                         }, error -> {
-                            Log.d("failure", "failure");
+                            Log.e("Fetch", "failure", error);
                             Toast.makeText(this, "Failed to get Subscribed", Toast.LENGTH_SHORT).show();
                         });
     }

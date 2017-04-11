@@ -4,10 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by vlada on 10.04.2017.
- */
-
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
@@ -24,15 +20,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 "city text," +
                 "countryId integer," +
                 "FOREIGN KEY(countryId) REFERENCES countries(id));");
-
-
-
     }
-
-
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 }

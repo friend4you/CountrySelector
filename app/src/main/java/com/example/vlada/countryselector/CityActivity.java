@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.vlada.countryselector.api.ServiceGenerator;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -42,22 +43,24 @@ public class CityActivity extends AppCompatActivity {
 
     public void fetchCityInfo() {
         ServiceGenerator.getCountiesService().getCityInfo(city)
+                .flatMap(info -> Observable.from(info.getResult()))
+                .first()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(info -> {
-                    title.setText(info.getResult().get(0).getTitle());
-                    summary.setText(info.getResult().get(0).getSummary());
+                    title.setText(info.getTitle());
+                    summary.setText(info.getSummary());
                     Glide.with(image.getContext())
-                            .load(info.getResult().get(0).getThumbnailImg())
+                            .load(info.getThumbnailImg())
                             .into(image);
                     link.setClickable(true);
-                    link.setText(info.getResult().get(0).getWikipediaUrl());
+                    link.setText(info.getWikipediaUrl());
                     link.setOnClickListener(c ->{
-                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse("http://"+ info.getResult().get(0).getWikipediaUrl() ) );
+                        Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+ info.getWikipediaUrl()));
                         startActivity( browse );
                     });
                 }, error -> {
-                    Log.d("fetchCityInfo", "failure");
+                    Log.e("fetchCityInfo", "failure", error);
                     Toast.makeText(this, "Info not found", Toast.LENGTH_SHORT).show();
                 });
 
